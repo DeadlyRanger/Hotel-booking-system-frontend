@@ -1,7 +1,45 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import axios from 'axios';
+import toast from "react-hot-toast";
 export default function Login() {
+
+  const [details,setDetails] =  useState({
+    email:'',
+    password:''
+  })
+
+  const handleChange =(e)=>{
+      setDetails({
+        ...details,
+        [e.target.name] : e.target.value
+      })
+  }
+  let navigate = useNavigate();
     
+  const  handleSubmit=async()=>{
+      const user =  await axios.post('http://localhost:3000/api/user/login',details , {
+      withCredentials: true 
+      }).then((res)=>{
+        toast.success(res.data.message)
+        navigate('/');
+        
+      }).catch((err)=> {
+        toast.error(err.response.data.message)
+      })
+      
+      
+      
+      
+  
+  
+    
+      
+      
+      }
+     
+
+  
   return (
     <div className="min-h-screen flex bg-gray-50">
       {/* LEFT IMAGE */}
@@ -30,6 +68,8 @@ export default function Login() {
             </label>
             <input
               type="email"
+              name="email"
+              onChange={handleChange}
               placeholder="demo@site.com"
               className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-black"
             />
@@ -41,6 +81,8 @@ export default function Login() {
               Password
             </label>
             <input
+              name="password"
+               onChange={handleChange}
               type="password"
               placeholder="••••••••"
               className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-black"
@@ -48,7 +90,9 @@ export default function Login() {
           </div>
 
           {/* BUTTON */}
-          <button className="w-full bg-black text-white py-2 rounded-md hover:bg-gray-800 transition">
+          <button
+          onClick={handleSubmit}
+            className="w-full bg-black text-white py-2 rounded-md hover:bg-gray-800 transition">
             Login
           </button>
 
