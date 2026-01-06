@@ -43,7 +43,7 @@ const Profile = () => {
 
     try {
       await axios.delete(
-        `http://localhost:3000/api/booking/bookings/${bookingId}`,
+        `http://localhost:3000/api/listing/bookings/${bookingId}`,
         { withCredentials: true }
       );
       alert("Booking cancelled ✅");

@@ -11,6 +11,7 @@ import AdminRegister from './pages/AdminRegister'
 import AddHotel from './pages/AddHotel'
 import AdminDashboard from './pages/AdminDashboard'
 import MyListings from './pages/MyListings'
+import EditHotel from './pages/EditHotel'
 
  
  function App() {
@@ -34,6 +35,7 @@ import MyListings from './pages/MyListings'
           <Route path='addhotel' element={<AddHotel/>}/>   
           <Route path='dashboard' element = {<AdminDashboard/>}/>
           <Route path='mylistings' element ={<MyListings/>}/>
+          <Route path = 'edithotel/:id' element = {<EditHotel/>}/>
         
          </Route>
          <Route path ="*" element={<h1>404 Not Found</h1>}/> 

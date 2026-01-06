@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const MyListings = () => {
   const [details, setDetails] = useState([]);
-
+ const navigate = useNavigate();
   const deleteHotel = async(id)=>{
      try{
        await axios.delete(`http://localhost:3000/api/listings/hotels/${id}`,{withCredentials:true});
@@ -74,7 +75,7 @@ const MyListings = () => {
 
                   {/* ACTION BUTTONS */}
                   <div className="flex gap-3 mt-4">
-                    <button
+                    <button onClick={()=> navigate(`/admin/edithotel/${item._id}`)}
                       className="flex-1 border border-indigo-600 text-indigo-600 py-1.5 rounded hover:bg-indigo-600 hover:text-white transition"
                     >
                       Edit
