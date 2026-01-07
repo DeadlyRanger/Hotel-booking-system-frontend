@@ -12,6 +12,7 @@ import AddHotel from './pages/AddHotel'
 import AdminDashboard from './pages/AdminDashboard'
 import MyListings from './pages/MyListings'
 import EditHotel from './pages/EditHotel'
+import AdminLogin from './pages/AdminLogin'
 
  
  function App() {
@@ -31,6 +32,7 @@ import EditHotel from './pages/EditHotel'
 
         {/* //admin routes */}
          <Route path='/admin'>
+         <Route path='login' element={<AdminLogin/>}/>
            <Route path='register' element={<AdminRegister/>}/>
           <Route path='addhotel' element={<AddHotel/>}/>   
           <Route path='dashboard' element = {<AdminDashboard/>}/>

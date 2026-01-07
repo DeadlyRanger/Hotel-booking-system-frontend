@@ -53,11 +53,11 @@ export default function Login() {
 
       {/* RIGHT FORM */}
       <div className="w-full md:w-1/2 flex items-center justify-center">
-        <div className="w-full max-w-md bg-white p-8 rounded-xl shadow-sm">
-          <h2 className="text-3xl font-semibold text-orange-800 mb-2">
+        <div className="w-full max-w-md  bg-white p-8 rounded-xl shadow-sm">
+          <h2 className="text-3xl text-center font-semibold text-orange-800 mb-2">
             Welcome Back
           </h2>
-          <p className="text-gray-500 mb-6">
+          <p className="text-gray-500 text-center mb-6">
             Please login to your account
           </p>
 
@@ -101,8 +101,13 @@ export default function Login() {
             Don’t have an account?{" "}
             <span className="text-black font-medium cursor-pointer">
                 <Link to={'/register'}>Register</Link>
+              
             </span>
           </p>
+            
+         
+          
+        
         </div>
       </div>
     </div>
