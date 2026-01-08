@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import axios from 'axios'
 import toast from "react-hot-toast";
 import { Navigate, useNavigate } from "react-router-dom";
+import { backendcontext } from "../context/ApiContext";
+
 
 
 const AdminRegister = () => {
@@ -18,13 +20,14 @@ const AdminRegister = () => {
     });
   };
 
+  let {serverurl,userrole,setUserrole} = useContext(backendcontext);
   let navigate = useNavigate();
   const registerAdmin =async()=>{
      try{
-         let user = await axios.post('http://localhost:3000/api/user/register',{...formData,role:'admin'});
+         let user = await axios.post(`${serverurl}/api/user/register`,{...formData,role:'admin'});
          toast.success('Admin registerd successfully');
           navigate('/login');
-
+        
      }
      catch(err){
        toast.error(err.response.data.message);

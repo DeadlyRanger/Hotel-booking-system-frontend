@@ -1,10 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
+import { backendcontext } from "../context/ApiContext";
 
 const Booking = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+
+  const {
+    serverurl,
+    isLoggedIn,
+    userrole,
+    setIsLoggedIn,
+    setUserrole,
+  } = useContext(backendcontext);
 
   const [hoteldata, setHotelData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -14,23 +23,33 @@ const Booking = () => {
   const [totalPrice, setTotalPrice] = useState(0);
   const [bookingLoading, setBookingLoading] = useState(false);
 
+  /* ---------------- AUTH GUARD ---------------- */
+  useEffect(() => {
+    if (!isLoggedIn) {
+      navigate("/login");
+    }
+  }, [isLoggedIn, navigate]);
+
   /* ---------------- FETCH HOTEL ---------------- */
   useEffect(() => {
+    if (!isLoggedIn) return;
+
     const fetchHotel = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:3000/api/listings/hotels/${id}`
+          `${serverurl}/api/listings/hotels/${id}`
         );
         setHotelData(res.data.hotel);
       } catch (err) {
-        console.log("HOTEL FETCH ERROR:", err);
+        navigate("/");
+        alert("Unable to fetch hotel details");
       } finally {
         setLoading(false);
       }
     };
 
     fetchHotel();
-  }, [id]);
+  }, [id, serverurl, isLoggedIn, navigate]);
 
   /* ---------------- PRICE CALCULATION ---------------- */
   useEffect(() => {
@@ -44,17 +63,10 @@ const Booking = () => {
   }, [checkIn, checkOut, hoteldata]);
 
   /* ---------------- LOGOUT ---------------- */
-  const handleLogout = async () => {
-    try {
-      await axios.post(
-        "http://localhost:3000/api/user/logout",
-        {},
-        { withCredentials: true }
-      );
-      navigate("/login");
-    } catch (err) {
-      alert("Logout failed");
-    }
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    setUserrole(null);
+    navigate("/login");
   };
 
   /* ---------------- BOOKING ---------------- */
@@ -73,7 +85,7 @@ const Booking = () => {
       setBookingLoading(true);
 
       await axios.post(
-        `http://localhost:3000/api/listing/bookings/${id}`,
+        `${serverurl}/api/listing/bookings/${id}`,
         { checkIn, checkOut },
         { withCredentials: true }
       );
@@ -88,6 +100,8 @@ const Booking = () => {
   };
 
   /* ---------------- UI STATES ---------------- */
+  if (!isLoggedIn) return null;
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center text-lg">
@@ -111,12 +125,16 @@ const Booking = () => {
       {/* HEADER */}
       <div className="max-w-6xl mx-auto flex justify-between items-center mb-6">
         <h1 className="text-xl font-semibold">Booking Details</h1>
-        <button
-          onClick={handleLogout}
-          className="text-sm text-red-500 border border-red-500 px-4 py-1.5 rounded hover:bg-red-500 hover:text-white transition"
-        >
-          Logout
-        </button>
+
+        {/* 🔥 SHOW LOGOUT ONLY IF LOGGED IN */}
+        {isLoggedIn && (
+          <button
+            onClick={handleLogout}
+            className="text-sm text-red-500 border border-red-500 px-4 py-1.5 rounded hover:bg-red-500 hover:text-white transition"
+          >
+            Logout
+          </button>
+        )}
       </div>
 
       <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">

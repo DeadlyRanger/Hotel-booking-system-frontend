@@ -1,7 +1,9 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { backendcontext } from "../context/ApiContext";
+
 
 const AddHotel = () => {
   const [formData, setFormData] = useState({
@@ -13,6 +15,7 @@ const AddHotel = () => {
     Contact: "",
     Image: ""
   });
+  
 
   const handleChange = (e) => {
     setFormData({
@@ -21,10 +24,11 @@ const AddHotel = () => {
     });
   };
   let navigate = useNavigate();
+  let  {serverurl,userrole,setUserrole} = useContext(backendcontext);
   
   const  addhotel = async()=>{
    try{
-     let data =  await axios.post('http://localhost:3000/api/listings/addhotel',formData,{
+     let data =  await axios.post(`${serverurl}/api/listings/addhotel`,formData,{
         withCredentials:true
      });
     toast.success('hotel added successfully');

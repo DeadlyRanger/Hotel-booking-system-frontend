@@ -1,7 +1,9 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
+import { backendcontext } from "../context/ApiContext";
+
 
 const EditHotel = () => {
     const {id} = useParams();
@@ -23,9 +25,10 @@ const EditHotel = () => {
   };
   let navigate = useNavigate();
   
+  let{serverurl,userrole,setUserrole} = useContext(backendcontext);
   const  edithotel = async()=>{
    try{
-     let data =  await axios.put(`http://localhost:3000/api/listings/hotels/${id}`,formData,{
+     let data =  await axios.put(`${serverurl}/api/listings/hotels/${id}`,formData,{
         withCredentials:true
      });
     toast.success('hotel modified successfully');

@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link , useNavigate
 } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { backendcontext } from "../context/ApiContext";
 
 
 function Register() {
@@ -13,9 +14,10 @@ function Register() {
     });
     
     const Navigate = useNavigate();
+    let {serverurl,userrole,setUserrole} = useContext(backendcontext);
   const  createUser = async()=>{
    try{
-    const res = await axios.post('http://localhost:3000/api/user/register',detail);
+    const res = await axios.post(`${serverurl}/api/user/register`,detail);
     toast.success(res.data.message);
     Navigate('/login')
    }

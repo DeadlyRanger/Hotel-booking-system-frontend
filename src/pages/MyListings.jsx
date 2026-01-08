@@ -1,13 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { backendcontext } from "../context/ApiContext";
 
 const MyListings = () => {
   const [details, setDetails] = useState([]);
  const navigate = useNavigate();
+ let {serverurl,userrole,setUserrole} = useContext(backendcontext);
   const deleteHotel = async(id)=>{
      try{
-       await axios.delete(`http://localhost:3000/api/listings/hotels/${id}`,{withCredentials:true});
+       await axios.delete(`${serverurl}/api/listings/hotels/${id}`,{withCredentials:true});
        fetchDetails();
      }
      catch(err){
@@ -17,7 +19,7 @@ const MyListings = () => {
   const fetchDetails = async () => {
     try {
       const hotels = await axios.get(
-        "http://localhost:3000/api/listings/managehotels",
+        `${serverurl}/api/listings/managehotels`,
         { withCredentials: true }
       );
 

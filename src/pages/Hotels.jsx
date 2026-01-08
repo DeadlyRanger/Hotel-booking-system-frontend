@@ -1,15 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { backendcontext } from "../context/ApiContext";
 
 const Hotels = () => {
   const [details, setDetails] = useState([]);
   let navigate = useNavigate();
 
+  let {serverurl,setUserrole,userrole} = useContext(backendcontext);
   const fetchDetails = async () => {
     try {
       const res = await axios.get(
-        "http://localhost:3000/api/listings/allhotels"
+        `${serverurl}/api/listings/allhotels`
       );
 
       setDetails(res.data.Listing || res.data.listing || []);

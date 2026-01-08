@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { backendcontext } from "../context/ApiContext";
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -22,11 +23,13 @@ const Profile = () => {
     }
   };
 
+  let {serverurl,userrole,setUserrole} =  useContext(backendcontext)
+
   /* ---------------- FETCH MY BOOKINGS ---------------- */
   const fetchBookings = async () => {
     try {
       const res = await axios.get(
-        "http://localhost:3000/api/listing/bookings/my",
+        `${serverurl}/api/listing/bookings/my`,
         { withCredentials: true }
       );
       setBookings(res.data.bookings);
@@ -43,7 +46,7 @@ const Profile = () => {
 
     try {
       await axios.delete(
-        `http://localhost:3000/api/listing/bookings/${bookingId}`,
+        `${serverurl}/api/listing/bookings/${bookingId}`,
         { withCredentials: true }
       );
       alert("Booking cancelled ✅");
@@ -57,7 +60,7 @@ const Profile = () => {
   const handleLogout = async () => {
     try {
       await axios.post(
-        "http://localhost:3000/api/user/logout",
+        `${serverurl}/api/user/logout`,
         {},
         { withCredentials: true }
       );

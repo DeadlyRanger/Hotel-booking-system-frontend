@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { backendcontext } from "../context/ApiContext";
 
 export default function AdminLogin() {
   const navigate = useNavigate();
@@ -27,13 +28,14 @@ export default function AdminLogin() {
       return;
     }
 
+     let {serverurl,userrole,setUserrole} = useContext(backendcontext);
     try {
       const res = await axios.post(
-        "http://localhost:3000/api/user/login",
+        `${serverurl}/api/user/login`,
         details,
         { withCredentials: true }
       );
-
+             setUserrole(res.data.user.role);
       toast.success(res.data.message || "Login successful");
       navigate("/");
     } catch (error) {
