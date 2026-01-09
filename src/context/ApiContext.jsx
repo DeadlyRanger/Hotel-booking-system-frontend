@@ -1,24 +1,34 @@
-import React, { createContext, useState, useEffect } from "react";
+import React, { createContext, useEffect, useState } from "react";
 
-export const backendcontext = createContext();
+
+
+export const backendcontext = createContext(null);
 
 export const ApiContext = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userrole, setUserrole] = useState("user");
 
-  // load from localStorage on refresh
+ 
   useEffect(() => {
     const loggedIn = localStorage.getItem("isLoggedIn");
     const role = localStorage.getItem("userrole");
 
-    if (loggedIn === "true") setIsLoggedIn(true);
-    if (role) setUserrole(role);
+    if (loggedIn === "true") {
+      setIsLoggedIn(true);
+    }
+
+    if (role) {
+      setUserrole(role);
+    }
   }, []);
+
+
+  const serverurl = import.meta.env.VITE_API_URL;
 
   return (
     <backendcontext.Provider
       value={{
-         serverurl:`https://hotel-booking-system-backend-one.vercel.app/`,
+        serverurl,
         isLoggedIn,
         setIsLoggedIn,
         userrole,
