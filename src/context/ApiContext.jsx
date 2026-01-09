@@ -24,6 +24,7 @@ export const ApiContext = ({ children }) => {
 
 
   const serverurl = import.meta.env.VITE_API_URL;
+   console.log("API FROM CONTEXT =>", serverurl);
 
   return (
     <backendcontext.Provider
