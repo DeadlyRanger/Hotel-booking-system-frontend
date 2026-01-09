@@ -18,7 +18,7 @@ export const ApiContext = ({ children }) => {
   return (
     <backendcontext.Provider
       value={{
-         serverurl:`http://localhost:3000`,
+         serverurl:`https://hotel-booking-system-backend-one.vercel.app/`,
         isLoggedIn,
         setIsLoggedIn,
         userrole,
