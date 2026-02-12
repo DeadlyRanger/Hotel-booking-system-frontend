@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { backendcontext } from "../context/ApiContext";
+import { Mail, Lock, ArrowRight, UserCheck } from "lucide-react";
 
 export default function Login() {
   const [details, setDetails] = useState({
@@ -24,11 +25,15 @@ export default function Login() {
     serverurl,
     setIsLoggedIn,
     setUserrole,
-    userrole,
   } = useContext(backendcontext);
 
   /* ---------------- LOGIN ---------------- */
   const handleSubmit = async () => {
+    if (!details.email || !details.password) {
+      toast.error("Please fill in all fields");
+      return;
+    }
+
     try {
       const res = await axios.post(
         `${serverurl}/api/user/login`,
@@ -38,92 +43,115 @@ export default function Login() {
           
       // ✅ SUCCESS
       toast.success(res.data.message);
-      console.log(res.data.user.role);
-      setUserrole(res.data.user.role); // "user" or "admin"
-     
-
-      // 🔥 SET CONTEXT FROM RESPONSE
-      setIsLoggedIn(true);
       
+      const role = res.data.user.role;
+      setUserrole(role);
+      setIsLoggedIn(true);
 
-      // 🔁 REDIRECT BASED ON ROLE
-      if (userrole === 'admin') {
+      // 🔁 REDIRECT BASED ON RESPONSE ROLE (Immediate)
+      if (role === 'admin') {
         navigate("/admin/dashboard");
       } else {
         navigate("/");
       }
     } catch (err) {
-      toast.error(err.response?.data?.message);
+      toast.error(err.response?.data?.message || "Login failed");
     }
   };
 
   return (
-    <div className="min-h-screen flex bg-gray-50">
-      {/* LEFT IMAGE */}
-      <div className="hidden md:block w-1/2">
+    <div className="min-h-screen flex bg-white font-sans">
+      
+      {/* LEFT SECTION - IMAGE WITH GLASS OVERLAY */}
+      <div className="hidden lg:block w-[55%] relative overflow-hidden">
         <img
-          src="https://images.unsplash.com/photo-1610641818989-c2051b5e2cfd?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0"
-          alt="login"
-          className="w-full h-full object-cover"
+          src="https://images.unsplash.com/photo-1610641818989-c2051b5e2cfd?q=80&w=1170&auto=format&fit=crop"
+          alt="login-resort"
+          className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-1000"
         />
+        {/* Glass Overlay Box */}
+        <div className="absolute bottom-12 left-12 right-12 bg-indigo-900/40 backdrop-blur-md p-10 rounded-3xl border border-white/20 shadow-2xl">
+          <h2 className="text-4xl font-bold text-white mb-3 tracking-tight">Experience Comfort</h2>
+          <p className="text-white/90 text-lg leading-relaxed max-w-md">
+            Your next luxury escape is just a few clicks away. Log in to access your personalized travel dashboard.
+          </p>
+        </div>
       </div>
 
-      {/* RIGHT FORM */}
-      <div className="w-full md:w-1/2 flex items-center justify-center">
-        <div className="w-full max-w-md bg-white p-8 rounded-xl shadow-sm">
-          <h2 className="text-3xl text-center font-semibold text-orange-800 mb-2">
-            Welcome Back
-          </h2>
-          <p className="text-gray-500 text-center mb-6">
-            Please login to your account
-          </p>
-
-          {/* EMAIL */}
-          <div className="mb-4">
-            <label className="block text-sm text-gray-600 mb-1">
-              Email
-            </label>
-            <input
-              type="email"
-              name="email"
-              onChange={handleChange}
-              placeholder="demo@site.com"
-              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-black"
-            />
+      {/* RIGHT SECTION - LOGIN FORM */}
+      <div className="w-full lg:w-[45%] flex items-center justify-center bg-[#fcfcfe] p-8 md:p-12">
+        <div className="w-full max-w-md">
+          
+          {/* ICON & TITLE */}
+          <div className="text-center mb-10">
+            <div className="inline-flex items-center justify-center w-14 h-14 bg-indigo-50 rounded-2xl mb-4 border border-indigo-100 shadow-sm">
+              <UserCheck className="w-7 h-7 text-indigo-600" />
+            </div>
+            <h2 className="text-4xl font-black text-[#1a1a1a] tracking-tight">
+              Welcome <span className="text-indigo-600">Back</span>
+            </h2>
+            <p className="text-gray-500 font-medium mt-3">
+              Please enter your details to sign in
+            </p>
           </div>
 
-          {/* PASSWORD */}
-          <div className="mb-6">
-            <label className="block text-sm text-gray-600 mb-1">
-              Password
-            </label>
-            <input
-              type="password"
-              name="password"
-              onChange={handleChange}
-              placeholder="••••••••"
-              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-black"
-            />
-          </div>
+          <div className="space-y-6">
+            {/* EMAIL */}
+            <div className="space-y-2">
+              <label className="flex items-center gap-2 text-sm font-bold text-[#333] uppercase tracking-wide">
+                <Mail className="w-4 h-4 text-gray-400" /> Email Address
+              </label>
+              <input
+                type="email"
+                name="email"
+                onChange={handleChange}
+                placeholder="demo@stayease.com"
+                className="w-full px-5 py-4 bg-[#f8f9fb] border border-gray-200 rounded-2xl focus:bg-white focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all placeholder:text-gray-400 font-medium"
+              />
+            </div>
 
-          {/* BUTTON */}
-          <button
-            onClick={handleSubmit}
-            className="w-full bg-black text-white py-2 rounded-md hover:bg-gray-800 transition"
-          >
-            Login
-          </button>
+            {/* PASSWORD */}
+            <div className="space-y-2">
+              <div className="flex justify-between items-center">
+                <label className="flex items-center gap-2 text-sm font-bold text-[#333] uppercase tracking-wide">
+                  <Lock className="w-4 h-4 text-gray-400" /> Password
+                </label>
+                <Link to="#" className="text-xs font-bold text-indigo-600 hover:text-indigo-700">Forgot Password?</Link>
+              </div>
+              <input
+                type="password"
+                name="password"
+                onChange={handleChange}
+                placeholder="••••••••"
+                className="w-full px-5 py-4 bg-[#f8f9fb] border border-gray-200 rounded-2xl focus:bg-white focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all font-medium"
+              />
+            </div>
 
-          {/* FOOTER */}
-          <p className="text-center text-sm text-gray-600 mt-4">
-            Don’t have an account?{" "}
-            <Link
-              to="/register"
-              className="text-black font-medium"
+            {/* LOGIN BUTTON */}
+            <button
+              onClick={handleSubmit}
+              className="w-full bg-[#0f172a] text-white py-4 rounded-2xl font-bold text-lg shadow-xl shadow-slate-200 hover:bg-black hover:-translate-y-1 transition-all active:scale-[0.98] flex items-center justify-center gap-3 mt-4"
             >
-              Register
-            </Link>
-          </p>
+              Login <ArrowRight className="w-5 h-5" />
+            </button>
+
+            {/* REGISTER LINK */}
+            <p className="text-center text-sm font-medium text-gray-500 mt-10">
+              Don’t have an account?{" "}
+              <Link
+                to="/register"
+                className="text-indigo-600 font-bold hover:underline decoration-2 underline-offset-4"
+              >
+                Create Account
+              </Link>
+            </p>
+          </div>
+
+          <div className="mt-12 flex justify-center">
+            <span className="text-[10px] text-gray-400 uppercase tracking-[0.3em] font-bold">
+              StayEase Security Verified
+            </span>
+          </div>
         </div>
       </div>
     </div>
